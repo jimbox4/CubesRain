@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1664779356085483149}
   - component: {fileID: 6007175489888342813}
   - component: {fileID: 2163071626702426108}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -146,7 +146,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f26a8de3514f994408d6fae237b02cfc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _materialPrefab: {fileID: 2100000, guid: f3dff34d4094ea44984314799100dc1f, type: 2}
   _boxLayerMask:
     serializedVersion: 2
     m_Bits: 64
+  _material: {fileID: 2100000, guid: f3dff34d4094ea44984314799100dc1f, type: 2}

@@ -1,6 +1,6 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
+using CodeBase.Bombs;
 using CodeBase.Pool;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -15,15 +15,15 @@ namespace CodeBase.Cube
         private const float MaxReleaseDelay = 5f;
         private const float MinReleaseDelay = 2f;
         
-        [SerializeField] private Material _materialPrefab;
         [SerializeField] private LayerMask _boxLayerMask;
-
+        [SerializeField] private Material _material;
         public override event Action<Cube> Released;
 
         private MeshRenderer _meshRenderer;
         private Rigidbody _rigidbody;
         private BoxCollider _collider;
-
+        private BombsSpawner _bombsSpawner;
+        
         private float _releaseDelay;
         private bool _isTouched = false;
 
@@ -31,12 +31,16 @@ namespace CodeBase.Cube
         {
             _collider = GetComponent<BoxCollider>();
             _meshRenderer = GetComponent<MeshRenderer>();
-            _meshRenderer.material = new Material(_materialPrefab);
             _rigidbody = GetComponent<Rigidbody>();
         }
 
+        public void Initialize(BombsSpawner  spawner)
+        {
+            _bombsSpawner =  spawner;
+        }
         public override void Release()
         {
+            _bombsSpawner.Spawn(transform.position);
             Released?.Invoke(this);
         }
 
@@ -47,6 +51,7 @@ namespace CodeBase.Cube
 
         public override void SetEnable()
         {
+            _meshRenderer.material = new Material(_material);
             _isTouched = false;
             _meshRenderer.enabled = true;
             _collider.enabled = true;
@@ -68,11 +73,21 @@ namespace CodeBase.Cube
             {
                 return;
             }
-
+            
+            SetRandomColor();
             _isTouched = true;
             StartCoroutine(StartReleaseDelay());
         }
 
+        private void SetRandomColor()
+        {
+            float r = Random.Range(0f, 1f);
+            float g = Random.Range(0f, 1f);
+            float b = Random.Range(0f, 1f);
+            
+            _meshRenderer.material.color = new Color(r, g, b);
+        }
+        
         private IEnumerator StartReleaseDelay()
         {
             _releaseDelay = Random.Range(MinReleaseDelay, MaxReleaseDelay);
